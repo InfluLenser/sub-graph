@@ -37,6 +37,7 @@ export function handleServiceData(content: Bytes): void {
   description.rateToken = getValueAsString(jsonObject, 'rateToken')
   description.rateAmount = getValueAsString(jsonObject, 'rateAmount')
   description.video_url = getValueAsString(jsonObject, 'video_url')
+  description.members = getValueAsArray(jsonObject, 'members')
 
   //Creates duplicate values. Open issue
   //https://github.com/graphprotocol/graph-node/issues/4087
@@ -125,6 +126,12 @@ export function handleUserData(content: Bytes): void {
   description.name = getValueAsString(jsonObject, 'name')
   description.video_url = getValueAsString(jsonObject, 'video_url')
   description.image_url = getValueAsString(jsonObject, 'image_url')
+  description.isOrganization = getValueAsBoolean(jsonObject, 'isOrganization')
+  description.members = getValueAsArray(jsonObject, 'members')
+  // const members = getValueAsString(jsonObject, 'members')
+  // if (members !== null) {
+  //   description.members_raw = members.toLowerCase()
+  // }
 
   //Creates duplicate values. Open issue
   //https://github.com/graphprotocol/graph-node/issues/4087
@@ -179,6 +186,29 @@ function getValueAsBigInt(jsonObject: TypedMap<string, JSONValue>, key: string):
   }
 
   return value.toBigInt()
+}
+
+function getValueAsBoolean(jsonObject: TypedMap<string, JSONValue>, key: string): boolean | null {
+  const value = jsonObject.get(key)
+
+  if (value == null || value.isNull() || value.kind != JSONValueKind.BOOL) {
+    return null
+  }
+
+  return value.toBool()
+}
+
+function getValueAsArray(jsonObject: TypedMap<string, JSONValue>, key: string): string[] | null {
+  const value = jsonObject.get(key)
+
+  if (value == null || value.isNull() || value.kind != JSONValueKind.ARRAY) {
+    return null
+  }
+  let stringArray: string[] = []
+  value.toArray().map((value) => {
+    stringArray.push(JSON.stringify(value))
+  })
+  return stringArray
 }
 
 //Transforms a comma separated string of keywords into an Array of Keyword.id entities.
