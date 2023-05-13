@@ -199,15 +199,16 @@ function getValueAsBoolean(jsonObject: TypedMap<string, JSONValue>, key: string)
 }
 
 function getValueAsArray(jsonObject: TypedMap<string, JSONValue>, key: string): string[] | null {
-  const value = jsonObject.get(key)
+  const value: JSONValue | null = jsonObject.get(key)
 
   if (value == null || value.isNull() || value.kind != JSONValueKind.ARRAY) {
     return null
   }
   let stringArray: string[] = []
-  value.toArray().map((value) => {
-    stringArray.push(JSON.stringify(value))
-  })
+  for (let i = 0; i < stringArray.length; ++i) {
+    const stringValue: string = value.toString()
+    stringArray.push(stringValue)
+  }
   return stringArray
 }
 
