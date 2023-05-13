@@ -188,11 +188,11 @@ function getValueAsBigInt(jsonObject: TypedMap<string, JSONValue>, key: string):
   return value.toBigInt()
 }
 
-function getValueAsBoolean(jsonObject: TypedMap<string, JSONValue>, key: string): boolean | null {
+function getValueAsBoolean(jsonObject: TypedMap<string, JSONValue>, key: string): boolean {
   const value = jsonObject.get(key)
 
   if (value == null || value.isNull() || value.kind != JSONValueKind.BOOL) {
-    return null
+    return false
   }
 
   return value.toBool()
